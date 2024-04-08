@@ -8,6 +8,7 @@ import tensorflow.keras as keras
 import tensorflow.keras.layers as layers
 from tensorflow.keras.regularizers import l2
 from keras.optimizers import Adam
+from sklearn.model_selection import train_test_split
 
 # Leer  archivos CSV
 normal_signals_dt = pd.read_csv('ptbdb_normal.csv')
@@ -31,10 +32,14 @@ for row in normal_signals_data:
 for row in abnormal_signals_data:
     spectogram = signal_processor.image_to_array(row)
     final_abnormal_signals.append(spectogram)
-
-from sklearn.model_selection import train_test_split
-
+print("Tamaño de señales normales:", len(final_normal_signals))
+print("Tamaño de señalesanormales:", len(final_abnormal_signals))
 # Convertir las listas de espectrogramas en arrays 
+
+while len(array2) > len(array1):
+    random_index = random.randint(0, len(array2) - 1)
+    del array2[random_index]
+    
 X_normal = np.array(final_normal_signals)
 X_abnormal = np.array(final_abnormal_signals)
 
@@ -115,4 +120,4 @@ plt.ylabel('Loss')
 plt.show()
 
 # Guardar el modelo
-model.save('CNN_Modelo-VGG19.h5')
+model.save('CNN_ECG.h5')
