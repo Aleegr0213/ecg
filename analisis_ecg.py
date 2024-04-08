@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from filters import SignalProcessing
 from time import sleep
 from sklearn.model_selection import train_test_split
+import tensorflow as tf
 import tensorflow.keras as keras
 import tensorflow.keras.layers as layers
 from tensorflow.keras.regularizers import l2
