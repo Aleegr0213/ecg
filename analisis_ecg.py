@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import random
 import matplotlib.pyplot as plt
 from filters import SignalProcessing
 from time import sleep
@@ -36,9 +37,9 @@ print("Tamaño de señales normales:", len(final_normal_signals))
 print("Tamaño de señalesanormales:", len(final_abnormal_signals))
 # Convertir las listas de espectrogramas en arrays 
 
-while len(array2) > len(array1):
-    random_index = random.randint(0, len(array2) - 1)
-    del array2[random_index]
+while len(final_abnormal_signals) > len(final_normal_signals):
+    random_index = random.randint(0, len(final_abnormal_signals) - 1)
+    del final_abnormal_signals[random_index]
     
 X_normal = np.array(final_normal_signals)
 X_abnormal = np.array(final_abnormal_signals)
