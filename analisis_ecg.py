@@ -6,11 +6,12 @@ from filters import SignalProcessing
 from time import sleep
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
+from tensorflow import keras 
 import tensorflow.keras as keras
 import tensorflow.keras.layers as layers
 from tensorflow.keras.regularizers import l2
 from keras.optimizers import Adam
-from sklearn.model_selection import train_test_split
+
 
 # Leer  archivos CSV
 normal_signals_dt = pd.read_csv('ptbdb_normal.csv')
@@ -42,6 +43,9 @@ while len(final_abnormal_signals) > len(final_normal_signals):
     random_index = random.randint(0, len(final_abnormal_signals) - 1)
     del final_abnormal_signals[random_index]
     
+print("Tamaño de señales normales:", len(final_normal_signals))
+print("Tamaño de señalesanormales:", len(final_abnormal_signals))
+
 X_normal = np.array(final_normal_signals)
 X_abnormal = np.array(final_abnormal_signals)
 
