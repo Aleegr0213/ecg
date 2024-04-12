@@ -64,7 +64,7 @@ X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.6, r
 # len(X_train) 
 print("Tamaño x_train", len(X_train))
 print("Tamaño x_test", len(X_test))
-print("tamaño x_val", lend(X_val))
+print("tamaño x_val", len(X_val))
 # Normalizar 
 X_train = X_train / 255
 X_test = X_test / 255
