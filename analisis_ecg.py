@@ -13,8 +13,8 @@ from keras.optimizers import Adam
 
 
 # Leer  archivos CSV
-normal_signals_dt = pd.read_csv('ptbdb_normal.csv')
-abnormal_signals_dt = pd.read_csv('ptbdb_abnormal.csv')
+normal_signals_dt = pd.read_csv('new_normal_signal.csv')
+abnormal_signals_dt = pd.read_csv('new_normal_signal.csv')
 
 normal_signals_data = normal_signals_dt.to_numpy()
 abnormal_signals_data = abnormal_signals_dt.to_numpy()
@@ -59,11 +59,16 @@ y = np.concatenate((y_normal, y_abnormal), axis=0)
 # Dividir los datos en conjuntos de entrenamiento y prueba
 X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
 
-X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+X_test, X_val, y_test, y_val = train_test_split(X_temp, y_temp, test_size=0.6, random_state=42)
 
+# len(X_train) 
+print("Tamaño x_train", len(X_train))
+print("Tamaño x_test", len(X_test))
+print("tamaño x_val", lend(X_val))
 # Normalizar 
 X_train = X_train / 255
 X_test = X_test / 255
+X_val = X_val / 255
 
 # Imprimir las formas de los conjuntos de datos de entrenamiento y prueba
 print("Forma de X_train:", X_train.shape)
@@ -95,6 +100,8 @@ model = keras.Sequential([
     #layers.Dense(1, activation='sigmoid'),
     layers.Dense(2, activation='softmax'),
 ])
+
+print(model.summarize)
 
 model.compile(
     optimizer=Adam(learning_rate=0.0001),
