@@ -41,12 +41,6 @@ rsa==4.9
 scikit-learn==1.3.2
 scipy==1.10.1
 six==1.16.0
-tensorboard==2exist.13.0
-tensorboard-data-server==0.7.2
-tensorflow==2.13.0
-tensorflow-estimator==2.13.0
-tensorflow-intel==2.13.0
-tensorflow-io-gcs-filesystem==0.31.0
 termcolor==2.4.0
 threadpoolctl==3.4.0
 typing_extensions==4.5.0

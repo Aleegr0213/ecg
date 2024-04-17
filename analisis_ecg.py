@@ -78,46 +78,72 @@ print("Forma de y_test:", y_test.shape)
 print("Forma de X_test:", X_val.shape)
 print("Forma de y_test:", y_val.shape)
 
-model = keras.Sequential([
-    #Aplicar filtros altos en esta parte
-    layers.Conv2D(filters=512, kernel_size=3, activation='relu', padding='same',
-                  input_shape=[64, 64, 1]),
-    layers.Conv2D(filters=128, kernel_size=3, activation='relu', padding='same',),  
-    layers.MaxPool2D(),
-    layers.Dropout(0.2),
+# model = tf.keras.models.Sequential([
+#     #Aplicar filtros altos en esta parte
+#     tf.keras.layers.Conv2D(filters=512, kernel_size=3, activation='relu', padding='same',),
+#     tf.keras.layers.Conv2D(filters=128, kernel_size=3, activation='relu', padding='same',),  
+#     tf.keras.layers.MaxPool2D(),
+#     tf.keras.layers.Dropout(0.2),
 
-    # Block Two
-    layers.Conv2D(filters=128, kernel_size=3, activation='relu', padding='same',),  
-    layers.MaxPool2D(),
-    layers.Dropout(0.2),
+#     # Block Two
+#     tf.keras.layers.Conv2D(filters=128, kernel_size=3, activation='relu', padding='same',),  
+#     tf.keras.layers.MaxPool2D(),
+#     tf.keras.layers.Dropout(0.2),
 
-    # Head Red normal, solo hacer filtos pequeños porque es una clasificación binaria
-    layers.Flatten(),
-    layers.Dense(1024, activation='relu'),  
-    layers.Dropout(0.5),
-    layers.Dense(1024, activation='relu'),
-    layers.Dropout(0.5),
-    #layers.Dense(1, activation='sigmoid'),
-    layers.Dense(2, activation='softmax'),
+#     # Head Red normal, solo hacer filtos pequeños porque es una clasificación binaria
+#     tf.keras.layers.Flatten(),
+#     tf.keras.layers.Dense(1024, activation='relu'),  
+#     tf.keras.layers.Dropout(0.5),
+#     tf.keras.layers.Dense(1024, activation='relu'),
+#     tf.keras.layers.Dropout(0.5),
+#     #tf.keras.layers.Dense(1, activation='sigmoid'),
+#     tf.keras.layers.Dense(1, activation='softmax'),
+# ])
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(32, (5,5), padding='same', activation='relu', input_shape=(64, 64,1)),
+    tf.keras.layers.Conv2D(32, (5,5), padding='same', activation='relu'),
+    tf.keras.layers.MaxPool2D(),
+    tf.keras.layers.Dropout(0.25),
+    tf.keras.layers.Conv2D(64, (3,3), padding='same', activation='relu'),
+    tf.keras.layers.Conv2D(64, (3,3), padding='same', activation='relu'),
+    tf.keras.layers.MaxPool2D(strides=(2,2)),
+    tf.keras.layers.Dropout(0.25),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(1, activation='softmax')
 ])
 
-print(model.summarize)
 
-model.compile(
-    optimizer=Adam(learning_rate=0.0001),
-    loss='binary_crossentropy',
-    metrics=['binary_accuracy'],
-)
+# model.compile(
+#     optimizer=Adam(learning_rate=0.0001),
+#     loss='binary_crossentropy',
+#     metrics=['binary_accuracy'],
+# )
+
+# model.compile(
+#     optimizer=keras.optimizers.Adam(learning_rate=0.0001),
+#     loss=keras.losses.BinaryCrossentropy(),
+#     metrics=keras.metrics.BinaryAccuracy()
+# )
+
+model.compile(optimizer='sgd',
+              loss='binary_crossentropy',
+              metrics=[keras.metrics.BinaryAccuracy()])
+
+
+print(model.summary())
 
 history_model = model.fit(X_train, y_train,
                     epochs=10,
                     verbose=1,
-                     validation_data=(X_val, y_val),
+                    validation_data=(X_val, y_val),
 )
 
 # Graficar la precisión de entrenamiento y validación por época
-plt.plot(history_model.history['accuracy'])
-plt.plot(history_model.history['val_accuracy'])
+plt.plot(history_model.history['binary_accuracy'])
+plt.plot(history_model.history['val_binary_accuracy'])
 plt.title('Model Accuracy')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
@@ -132,4 +158,5 @@ plt.ylabel('Loss')
 plt.show()
 
 # Guardar el modelo
-model.save('CNN_ECG.h5')
+model.save('CNN_ECG.keras')
+
