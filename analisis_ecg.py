@@ -129,8 +129,6 @@ history = model.fit(
 
 print(history.history)
 
-import matplotlib.pyplot as plt
-
 # Graficar la precisión del entrenamiento y la validación
 plt.figure(figsize=(10, 4))
 plt.subplot(1, 2, 1)
