@@ -7,14 +7,13 @@ from time import sleep
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 from tensorflow import keras 
-from keras import layers
 from keras.regularizers import l2
 from keras.optimizers import Adam
 
 
 # Leer  archivos CSV
 normal_signals_dt = pd.read_csv('new_normal_signal.csv')
-abnormal_signals_dt = pd.read_csv('new_normal_signal.csv')
+abnormal_signals_dt = pd.read_csv('new_abnormal_signal.csv')
 
 normal_signals_data = normal_signals_dt.to_numpy()
 abnormal_signals_data = abnormal_signals_dt.to_numpy()
@@ -35,7 +34,7 @@ for row in abnormal_signals_data:
     spectogram = signal_processor.image_to_array(row)
     final_abnormal_signals.append(spectogram)
 print("Tamaño de señales normales:", len(final_normal_signals))
-print("Tamaño de señalesanormales:", len(final_abnormal_signals))
+print("Tamaño de señales anormales:", len(final_abnormal_signals))
 # Convertir las listas de espectrogramas en arrays 
 
 while len(final_abnormal_signals) > len(final_normal_signals):
@@ -43,7 +42,7 @@ while len(final_abnormal_signals) > len(final_normal_signals):
     del final_abnormal_signals[random_index]
     
 print("Tamaño de señales normales:", len(final_normal_signals))
-print("Tamaño de señalesanormales:", len(final_abnormal_signals))
+print("Tamaño de señales anormales:", len(final_abnormal_signals))
 
 X_normal = np.array(final_normal_signals)
 X_abnormal = np.array(final_abnormal_signals)
@@ -112,49 +111,45 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Flatten(),
     tf.keras.layers.Dense(128, activation='relu'),
     tf.keras.layers.Dropout(0.5),
-    tf.keras.layers.Dense(1, activation='softmax')
+    tf.keras.layers.Dense(1, activation='sigmoid')
 ])
-
-
-# model.compile(
-#     optimizer=Adam(learning_rate=0.0001),
-#     loss='binary_crossentropy',
-#     metrics=['binary_accuracy'],
-# )
-
-# model.compile(
-#     optimizer=keras.optimizers.Adam(learning_rate=0.0001),
-#     loss=keras.losses.BinaryCrossentropy(),
-#     metrics=keras.metrics.BinaryAccuracy()
-# )
-
-model.compile(optimizer='sgd',
-              loss='binary_crossentropy',
-              metrics=[keras.metrics.BinaryAccuracy()])
-
 
 print(model.summary())
 
-history_model = model.fit(X_train, y_train,
-                    epochs=10,
-                    verbose=1,
-                    validation_data=(X_val, y_val),
+model.compile(optimizer='adam', 
+              loss='binary_crossentropy', 
+              metrics=['accuracy'])
+
+history = model.fit(
+    X_train, y_train,
+    epochs=10,
+    verbose=1,
+    validation_data=(X_val, y_val)
 )
 
-# Graficar la precisión de entrenamiento y validación por época
-plt.plot(history_model.history['binary_accuracy'])
-plt.plot(history_model.history['val_binary_accuracy'])
+print(history.history)
+
+import matplotlib.pyplot as plt
+
+# Graficar la precisión del entrenamiento y la validación
+plt.figure(figsize=(10, 4))
+plt.subplot(1, 2, 1)
+plt.plot(history.history['accuracy'], label='Training Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
 plt.title('Model Accuracy')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
-plt.show()
+plt.legend()
 
-# Graficar la pérdida de entrenamiento y validación por época
-plt.plot(history_model.history['loss'])
-plt.plot(history_model.history['val_loss'])
+# Graficar la pérdida del entrenamiento y la validación
+plt.subplot(1, 2, 2)
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.title('Model Loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
+plt.legend()
+
 plt.show()
 
 # Guardar el modelo
